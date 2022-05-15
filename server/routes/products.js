@@ -6,7 +6,20 @@ const router = express.Router();
 router.get('', function (req, res) {
     //データベースからデータを見つける（find）
     Product.find({}, function (err, foundProducts) {
-        res.json(foundProducts)
+        return res.json(foundProducts);
+    })
+});
+
+//productIdを指定したときに、その商品を返す
+router.get('/:productId', function (req, res) {
+    //URLのproductIdを取得する
+    const productId = req.params.productId;
+    //データベースからデータを見つける（find）
+    Product.findById(productId, function (err, foundProduct) {
+        if (err) {
+            return res.status(422).send({ errors: [{ title: 'Product error', detail: 'product not found!' }] });
+        }
+        return res.json(foundProduct)
     })
 });
 
