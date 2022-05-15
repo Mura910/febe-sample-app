@@ -55,6 +55,17 @@ class FakeDb {
         ]
     }
 
+    async initDb() {
+        await this.cleanDb();
+        this.pushProductsToDb();
+    }
+
+    //await処理を持っている…asyncをつける
+    async cleanDb() {
+        //↓の処理を終わらせてから次の処理を走らせたい…awaitをつける
+        await Product.deleteMany({});
+    }
+
     pushProductsToDb() {
         this.products.forEach(
             (product) => {
@@ -63,10 +74,6 @@ class FakeDb {
             }
         )
     }
-
-    seeDb() {
-        this.pushProductsToDb();
-    }
 }
 
-module.exports= FakeDb;
+module.exports = FakeDb;

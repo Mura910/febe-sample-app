@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const config = require('./config/dev');
 const FakeDb = require('./fake-db')
 
+const productRoutes = require('./routes/products')
+
 //マングースでDBにつなぐ
 mongoose.connect(config.DB_URI, {
     useNewUrlParser: true,
@@ -10,16 +12,18 @@ mongoose.connect(config.DB_URI, {
 }).then(
     () => {
         const fakeDb = new FakeDb();
-        fakeDb.seeDb();
+        fakeDb.initDb();
     }
 );
 
 const app = express();
 
-//nodeサーバーでproductsというリクエストが来た場合は、successを呼び出しもとで実行してね、というコード。
-app.get('/products', function (req, res) {
-    res.json({ 'success': true })
-})
+app.use('/api/v1/products',productRoutes)
+
+// //nodeサーバーでproductsというリクエストが来た場合は、successを呼び出しもとで実行してね、というコード。
+// app.get('/products', function (req, res) {
+//     res.json({ 'success': true })
+// })
 
 //herokの時はその環境のポートを読む、何かしらの理由で読めないときは、3001をよむ
 const PORT = process.env.PORT || '3001'
